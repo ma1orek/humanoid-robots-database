@@ -1,0 +1,47 @@
+name: Update data from merarobotics.com
+
+# Copies the dataset from the production site once a day and commits it when it changed.
+# No secrets: the files are public and the commit uses the built-in GITHUB_TOKEN.
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the dataset
+        run: |
+          mkdir -p tmp
+          curl --fail --silent --show-error --location --retry 3 --max-time 120 -o tmp/humanoids.json https://merarobotics.com/data/humanoids.json
+          curl --fail --silent --show-error --location --retry 3 --max-time 120 -o tmp/humanoids.csv https://merarobotics.com/data/humanoids.csv
+
+      - name: Check the download before it replaces the data
+        run: |
+          jq -e '.meta.license == "CC BY 4.0" and .meta.attribution == "MERA Robotics, merarobotics.com" and (.models | length) > 300' tmp/humanoids.json
+          # no price, image or video fields may ever appear
+          if jq -r '.models[0] | keys[]' tmp/humanoids.json | grep -Eiq 'price|image|youtube|usd'; then echo "unexpected field in the dataset"; exit 1; fi
+          # the CSV must have the same number of data rows as the JSON has models
+          test "$(($(wc -l < tmp/humanoids.csv) - 1))" -ge "$(jq '.models | length' tmp/humanoids.json)"
+
+      - name: Replace the data and commit if it changed
+        run: |
+          mkdir -p data
+          cp tmp/humanoids.json data/humanoids.json
+          cp tmp/humanoids.csv data/humanoids.csv
+          rm -rf tmp
+          if [ -n "$(git status --porcelain data)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data
+            git commit -m "Update data from merarobotics.com"
+            git push
+          else
+            echo "No changes."
+          fi

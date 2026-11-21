@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it as below and credit MERA Robotics, merarobotics.com (CC BY 4.0)."
+type: dataset
+title: "Humanoid Robots Database"
+abstract: "Open dataset of humanoid robot models from manufacturers worldwide: manufacturer, country, height, mass, payload, degrees of freedom, speed, runtime, launch year, status, source of the specification and links to the model pages in up to 54 languages. No prices. A description of the market, not MERA stock."
+authors:
+  - name: "MERA Robotics"
+    website: "https://merarobotics.com"
+    country: PL
+    city: Warszawa
+license: CC-BY-4.0
+url: "https://merarobotics.com/en/data/"
+repository-code: "https://github.com/ma1orek/humanoid-robots-database"
+keywords:
+  - humanoid robots
+  - robotics
+  - robot specifications
+  - open data
+  - degrees of freedom

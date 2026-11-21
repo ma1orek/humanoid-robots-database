@@ -1,0 +1,12 @@
+{
+  "title": "Humanoid Robots Database",
+  "id": "YOUR_KAGGLE_USERNAME/humanoid-robots-database",
+  "subtitle": "Specs and status of humanoid robot models worldwide, no prices",
+  "description": "Open dataset of humanoid robot models from manufacturers worldwide, maintained by MERA Robotics (Warsaw, Poland): manufacturer, country, height, mass, payload, degrees of freedom, speed, runtime, launch year, status, the source of the specification, the date the entry was last reviewed and the model page address in up to 54 languages. An empty cell means the sources give no value; nothing is guessed. It describes the market, not MERA stock, and contains no prices and no manufacturer photos. Licence CC BY 4.0: credit 'MERA Robotics, merarobotics.com' and link to https://merarobotics.com/blog/humanoids. Live files: https://merarobotics.com/data/humanoids.csv and https://merarobotics.com/data/humanoids.json. Free API: https://merarobotics.com/api/humanoids.",
+  "licenses": [{ "name": "CC-BY-4.0" }],
+  "keywords": ["robotics", "humanoid robots", "technology", "tabular data", "open data"],
+  "resources": [
+    { "path": "humanoids.csv", "description": "One row per model; url_<language code> columns hold the model page address in each language where the page exists." },
+    { "path": "humanoids.json", "description": "The same models with a meta block: licence, attribution and field descriptions." }
+  ]
+}
