@@ -21,6 +21,8 @@ jobs:
           mkdir -p tmp
           curl --fail --silent --show-error --location --retry 3 --max-time 120 -o tmp/humanoids.json https://merarobotics.com/data/humanoids.json
           curl --fail --silent --show-error --location --retry 3 --max-time 120 -o tmp/humanoids.csv https://merarobotics.com/data/humanoids.csv
+          curl --fail --silent --show-error --location --retry 3 --max-time 120 -o tmp/robots.json https://merarobotics.com/data/robots.json
+          curl --fail --silent --show-error --location --retry 3 --max-time 120 -o tmp/robots.csv https://merarobotics.com/data/robots.csv
 
       - name: Check the download before it replaces the data
         run: |
@@ -29,12 +31,18 @@ jobs:
           if jq -r '.models[0] | keys[]' tmp/humanoids.json | grep -Eiq 'price|image|youtube|usd'; then echo "unexpected field in the dataset"; exit 1; fi
           # the CSV must have the same number of data rows as the JSON has models
           test "$(($(wc -l < tmp/humanoids.csv) - 1))" -ge "$(jq '.models | length' tmp/humanoids.json)"
+          # all categories: the same licence, more models than the humanoid file, every model has a category, no price fields
+          jq -e '.meta.license == "CC BY 4.0" and (.models | length) > 300 and all(.models[]; .category != null)' tmp/robots.json
+          if jq -r '.models[0] | keys[]' tmp/robots.json | grep -Eiq 'price|image|youtube|usd'; then echo "unexpected field in robots.json"; exit 1; fi
+          test "$(($(wc -l < tmp/robots.csv) - 1))" -ge "$(jq '.models | length' tmp/robots.json)"
 
       - name: Replace the data and commit if it changed
         run: |
           mkdir -p data
           cp tmp/humanoids.json data/humanoids.json
           cp tmp/humanoids.csv data/humanoids.csv
+          cp tmp/robots.json data/robots.json
+          cp tmp/robots.csv data/robots.csv
           rm -rf tmp
           if [ -n "$(git status --porcelain data)" ]; then
             git config user.name "github-actions[bot]"

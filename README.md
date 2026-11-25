@@ -12,6 +12,8 @@ This describes the market. It is not a MERA offer or stock. The dataset contains
 | --- | --- |
 | [`data/humanoids.json`](data/humanoids.json) | The whole dataset: a `meta` block (licence, attribution, field descriptions) and a `models` array |
 | [`data/humanoids.csv`](data/humanoids.csv) | The same models as one table (UTF-8, RFC 4180, empty cell = no value), with one `url_<language code>` column per language |
+| [`data/robots.json`](data/robots.json) | All robot categories in one dataset (humanoid robots and quadruped robots, more categories as they are added): the humanoid fields plus `category`, `length_cm`, `width_cm`, `ip_rating` and `use` |
+| [`data/robots.csv`](data/robots.csv) | The same as one table, with a `category` column and uses separated by semicolons |
 | [`CITATION.cff`](CITATION.cff) | Citation metadata (GitHub shows a "Cite this repository" button) |
 | [`huggingface/README.md`](huggingface/README.md) | Dataset card for Hugging Face |
 | [`kaggle/dataset-metadata.json`](kaggle/dataset-metadata.json) | Metadata for Kaggle |
@@ -20,6 +22,9 @@ The files here are copied automatically from the production site by a [GitHub Ac
 
 - JSON: <https://merarobotics.com/data/humanoids.json>
 - CSV: <https://merarobotics.com/data/humanoids.csv>
+- All categories, JSON: <https://merarobotics.com/data/robots.json>
+- All categories, CSV: <https://merarobotics.com/data/robots.csv>
+- Quadruped robot catalogue: <https://merarobotics.com/blog/quadrupeds>
 - Data page in 54 languages: <https://merarobotics.com/en/data/>
 
 ## Fields
@@ -51,9 +56,13 @@ curl "https://merarobotics.com/api/humanoids?manufacturer=Unitree&lang=de"
 
 # one model with its page addresses in every language
 curl "https://merarobotics.com/api/humanoids/unitree-g1"
+
+# all categories (category: humanoid or quadruped; also use, e.g. inspection)
+curl "https://merarobotics.com/api/robots?category=quadruped&use=inspection"
+curl "https://merarobotics.com/api/robots/boston-dynamics-spot"
 ```
 
-The API is described in [OpenAPI 3.1](https://merarobotics.com/.well-known/openapi.json). The same data is available to AI assistants through the MERA Robotics MCP server (`https://merarobotics.com/mcp`, tools `search_humanoid_database` and `get_humanoid_model`).
+The API is described in [OpenAPI 3.1](https://merarobotics.com/.well-known/openapi.json). The same data is available to AI assistants through the MERA Robotics MCP server (`https://merarobotics.com/mcp`, tools `search_humanoid_database` and `get_humanoid_model`, and for all categories `search_robot_database` and `get_robot_model`).
 
 ## Use the data
 
